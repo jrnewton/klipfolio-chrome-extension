@@ -1,0 +1,21 @@
+{
+  "name": "Klipfolio Chrome Extension",
+  "description": "Enhance Klipfolio with API data",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "permissions": ["storage"],
+  "host_permissions": ["https://app.klipfolio.com/datasources/view/*"],
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["https://app.klipfolio.com/datasources/view/*"],
+      "js": ["storage.js", "content.js"]
+    }
+  ],
+  "icons": {
+    "16": "/images/kce16.png",
+    "32": "/images/kce32.png",
+    "48": "/images/kce48.png",
+    "128": "/images/kce128.png"
+  }
+}

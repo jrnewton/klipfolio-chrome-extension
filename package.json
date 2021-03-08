@@ -1,0 +1,40 @@
+{
+  "name": "klipfolio-chrome-extension",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.2.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "es2017": true,
+      "browser": true,
+      "webextensions": true
+    },
+    "plugins": [
+      "prettier"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "prettier"
+    ],
+    "rules": {
+      "strict": "error",
+      "semi": "error",
+      "prettier/prettier": "error",
+      "endOfLine": "auto"
+    },
+    "ignorePatterns": [
+      "node_modules/"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "none",
+    "quoteProps": "consistent"
+  }
+}
