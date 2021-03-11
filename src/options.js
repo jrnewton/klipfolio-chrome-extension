@@ -9,16 +9,29 @@ const settings = [
 
 $(document).ready(async () => {
   //add listener
-  $('#save-button').click(() => {
+  $('#save-button').click(async (event) => {
     'use strict';
+
+    $('#save-button').text('Saving...');
 
     for (let param of settings) {
       const value = $('#' + param.elId).val();
 
-      const object = {};
-      object[param.keyName] = value;
-      setLocal(object);
+      const entry = {};
+      entry[param.keyName] = value;
+      try {
+        await setLocal(entry);
+      } catch (error) {
+        console.error('set', param, error);
+        $('#message').text(
+          'Failed to save item ' + JSON.stringify(param) + ': ' + error
+        );
+      }
     }
+
+    setTimeout(() => {
+      $('#save-button').text('Save');
+    }, 1000);
   });
 
   //load data
@@ -30,7 +43,10 @@ $(document).ready(async () => {
         $('#' + param.elId).val(value);
       }
     } catch (error) {
-      console.warn('Failed to get storage item', param);
+      console.error('get', param, error);
+      $('#message').text(
+        'Failed to get item ' + JSON.stringify(param) + ':' + error
+      );
     }
   }
 });

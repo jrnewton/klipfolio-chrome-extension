@@ -1,9 +1,16 @@
-async function fetchData(url, apiKey, subkey) {
-  'use strict';
+'use strict';
 
+async function fetchData(url, apiKey, subkey) {
   let json = null;
 
   try {
+    //check cache
+    const cacheEntry = await getCached(url);
+    if (cacheEntry) {
+      //console.log('returning', JSON.stringify(cacheEntry));
+      return cacheEntry;
+    }
+
     const headers = {
       'kf-api-key': apiKey
     };
@@ -15,24 +22,38 @@ async function fetchData(url, apiKey, subkey) {
 
     json = await dataResponse.json();
 
+    let data = null;
     if (subkey) {
-      return json.data[subkey];
+      data = json.data[subkey];
     } else {
-      return json.data;
+      data = json.data;
     }
+
+    //cache it
+    await setCached(url, data);
+
+    return data;
   } catch (error) {
-    console.error('Error during api fetch', apiKey, dataSourceId, error);
+    console.error(
+      'Klipfolio extension: rrror during API fetch',
+      apiKey,
+      dataSourceId,
+      error
+    );
     return null;
   }
 }
 
-function appendRow(table, label, data) {
-  'use strict';
-
+function appendRow(table, label, data, warn = false) {
   const row = table.insertRow(table.rows.length - 1);
 
   let labelCell = document.createElement('td');
   let dataCell = document.createElement('td');
+
+  if (warn) {
+    labelCell.setAttribute('style', 'color: red');
+    dataCell.setAttribute('style', 'color: red');
+  }
 
   labelCell.appendChild(document.createTextNode(label));
   dataCell.appendChild(document.createTextNode(data));
@@ -41,30 +62,7 @@ function appendRow(table, label, data) {
   row.appendChild(dataCell);
 }
 
-// function showWarning(parentElement) {
-//   'use strict';
-
-//   const dialog = document.createElement('dialog');
-//   dialog.setAttribute('open', '');
-//   dialog.appendChild(document.createTextNode('test'));
-
-//   parentElement.appendChild(dialog);
-// }
-
 async function main() {
-  'use strict';
-
-  let apiKey = null;
-  try {
-    apiKey = await getLocal('apiKey');
-  } catch (error) {
-    // window.alert(
-    //   'Klipfolio Chrome Extension: \nPlease define your API key in the extension options page.'
-    // );
-    console.warn('Failed to get api key.  Is it set?', error);
-    return;
-  }
-
   const tbody = document.querySelector(
     '#admin-pane > div.admin-pane-inner > table > tbody > tr > td.admin-content-column > div > div:nth-child(1) > div.admin-section-content > table:nth-child(1) > tbody'
   );
@@ -81,7 +79,33 @@ async function main() {
   }
 
   if (!dataSourceId) {
-    console.warn('Could not locate data source id on current page');
+    console.warn(
+      'Klipfolio extension: Could not locate data source id on current page'
+    );
+    appendRow(
+      table,
+      'Klipfolio Extension',
+      'Could not locate data source id on current page',
+      true
+    );
+    return;
+  }
+
+  let apiKey = null;
+  try {
+    apiKey = await getLocal('apiKey');
+    if (!apiKey) {
+      console.warn('Klipfolio extension: apiKey not set');
+      appendRow(
+        table,
+        'Klipfolio Extension',
+        'Please define your API key in the extension options page',
+        true
+      );
+      return;
+    }
+  } catch (error) {
+    console.warn('Klipfolio extension: failed to get apiKey', error);
     return;
   }
 
@@ -140,7 +164,10 @@ async function main() {
       appendRow(table, 'SOQL Query', props['SOQLQuery']);
       appendRow(table, 'Salesforce Mode', props['SalesforceMode']);
     } else {
-      console.warn('Unsupported connector type', connector);
+      console.info(
+        'Klipfolio extension: unsupported connector type',
+        connector
+      );
     }
   }
 }

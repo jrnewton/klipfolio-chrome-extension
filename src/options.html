@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Klipfolio Chrome Extension</title>
-    <link rel="style" href="options.css" />
+    <link rel="stylesheet" href="options.css" />
   </head>
 
   <body>
@@ -19,7 +19,6 @@
           An API key is required and must be configured for the extension to
           work.
         </p>
-        <p>Version: 0.0.1</p>
       </section>
       <section>
         <h1>Options</h1>
@@ -30,10 +29,14 @@
               <input id="apikey-input" type="text" />
             </li>
           </ul>
-          <button id="save-button">Save</button>
+          <button id="save-button" class="button">Save</button>
         </div>
+        <p id="message"></p>
       </section>
     </main>
+    <footer>
+      <p style="font-size: 10px">Version: 0.0.1</p>
+    </footer>
   </body>
   <script src="./thirdparty/jquery-3.5.1.min.js"></script>
   <script src="./storage.js"></script>
