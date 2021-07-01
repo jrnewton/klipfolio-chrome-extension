@@ -35,4 +35,4 @@ This extension is provided as-is. It is not provided by the Klipfolio company an
 
 ## Support
 
-[Submit a feature request or bug](https://github.com/jrnewton/klipfolio-chrome-extension/issues)
+[Send an email to submit a feature request or bug](mailto:newt@hey.com)
