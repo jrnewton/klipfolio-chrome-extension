@@ -35,31 +35,37 @@ async function fetchData(url, apiKey, subkey) {
     return data;
   } catch (error) {
     console.error(
-      'Klipfolio extension: rrror during API fetch',
+      'Klipfolio extension: error during API fetch',
+      url,
       apiKey,
-      dataSourceId,
       error
     );
     return null;
   }
 }
 
-function appendRow(table, label, data, warn = false) {
+function appendRow(table, label, data, elementCallback) {
   const row = table.insertRow(table.rows.length - 1);
 
   let labelCell = document.createElement('td');
-  let dataCell = document.createElement('td');
-
-  if (warn) {
-    labelCell.setAttribute('style', 'color: red');
-    dataCell.setAttribute('style', 'color: red');
-  }
-
   labelCell.appendChild(document.createTextNode(label));
-  dataCell.appendChild(document.createTextNode(data));
-
+  //span the label cell if no data is provided
+  if (data === null) {
+    labelCell.setAttribute('colspan', '2');
+  }
+  if (elementCallback) {
+    elementCallback(labelCell);
+  }
   row.appendChild(labelCell);
-  row.appendChild(dataCell);
+
+  if (data) {
+    let dataCell = document.createElement('td');
+    dataCell.appendChild(document.createTextNode(data));
+    if (elementCallback) {
+      elementCallback(dataCell);
+    }
+    row.appendChild(dataCell);
+  }
 }
 
 async function main() {
@@ -98,9 +104,11 @@ async function main() {
       console.warn('Klipfolio extension: apiKey not set');
       appendRow(
         table,
-        'Klipfolio Extension',
-        'Please define your API key in the extension options page',
-        true
+        'Klipfolio Extension: Please define your API key in the extension options page',
+        null,
+        (element) => {
+          element.setAttribute('style', 'color: red');
+        }
       );
       return;
     }
