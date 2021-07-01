@@ -8,13 +8,13 @@ async function getCached(key) {
     if (cacheEntry) {
       console.log('found cache entry for', key, cacheEntry.expires, Date.now());
       //{ expires: ms, data: { ... } }
-      if (cacheEntry.expires < Date.now()) {
-        console.log('cache entry still valid');
-        data = cacheEntry.data;
-      } else {
+      if (Date.now() > cacheEntry.expires) {
         console.log('cache entry expired');
         await removeLocal(key);
         console.log('cache entry removed');
+      } else {
+        console.log('cache entry still valid');
+        data = cacheEntry.data;
       }
     }
   } catch (error) {
