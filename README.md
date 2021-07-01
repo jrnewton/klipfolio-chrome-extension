@@ -23,8 +23,12 @@ The following connector types are implemented:
 - simple_rest
 - salesforce
 
-![screenshot](/screenshot.png)
+![screenshot](/screenshot68.png)
 
-### Upcoming Features
+## Warranty
 
-Open an issue! 
+This extension is provided as-is. It is not provided by the Klipfolio company and it is not provided as part of the Klipfolio product.
+
+## Support
+
+[Submit a feature request or bug](https://github.com/jrnewton/klipfolio-chrome-extension/issues)
