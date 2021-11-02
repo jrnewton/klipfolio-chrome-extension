@@ -30,7 +30,11 @@ $(document).ready(async () => {
     }
 
     setTimeout(() => {
-      $('#save-button').text('Save');
+      $('#save-button').text('Done!');
+
+      setTimeout(() => {
+        $('#save-button').text('Save');
+      }, 1000);
     }, 1000);
   });
 
