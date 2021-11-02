@@ -1,7 +1,7 @@
 {
   "name": "Klipfolio Chrome Extension",
   "description": "Enhance Klipfolio with API data",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "manifest_version": 3,
   "permissions": ["storage"],
   "host_permissions": ["https://app.klipfolio.com/datasources/view/*"],
